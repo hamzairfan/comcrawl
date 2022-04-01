@@ -39,10 +39,13 @@ def download_single_result(result: Result) -> Result:
     zipped_file = io.BytesIO(response.content)
     unzipped_file = gzip.GzipFile(fileobj=zipped_file)
 
-    raw_data: bytes = unzipped_file.read()
     try:
+        raw_data: bytes = unzipped_file.read()
         data: str = raw_data.decode("utf-8")
     except UnicodeDecodeError:
+        print(f"Warning: Could not extract file downloaded from {url}")
+        data = ""
+    except Exception as e:
         print(f"Warning: Could not extract file downloaded from {url}")
         data = ""
 
